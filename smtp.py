@@ -37,7 +37,7 @@ Pandora招聘信息总结是一个公益项目，
 
 我们的终极愿景是 “让信息更加顺畅的流动 + 有个秘书帮忙处理过载信息”。
 
-项目地址：https://jobs.daydreammy.xyz
+项目地址：https://jobs.dadao.fan
 投稿：欢迎企业HR、校招负责人及校园大使投稿，详情请见项目主页。
 交流群：系统维护和更新会第一时间发布在交流群（QQ群：442041683），欢迎进群交流。
 
@@ -296,7 +296,7 @@ def construct_personal_email_content(articles):
 
     <hr>
 
-    <p style="font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; color:#333;">本项目招聘信息 Demo：<a href="https://jobs.daydreammy.xyz" target="_blank">Pandora 招聘信息分享</a></p>
+    <p style="font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; color:#333;">本项目招聘信息 Demo：<a href="https://jobs.dadao.fan" target="_blank">Pandora 招聘信息分享</a></p>
 
     <p style="font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; color:#333;">我们的终极愿景是 “让信息更加顺畅的流动 + 用优质输入建立深刻认知”。</p>
 
