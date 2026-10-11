@@ -79,7 +79,7 @@ docker compose -f docker-compose.yml -f docker-compose.test.yml \
 
 ## 版本管理
 
-远程仓库：`https://github.com/DayDreammy/recruiment_wechat_airticle_summary`
+远程仓库：`https://github.com/dorightyang/recruiment_wechat_airticle_summary`
 
 - 主分支保留线上稳定版；新功能在独立分支开发并推远程，验证通过后合入。
 - `config.json`、`.env`、`data/`、`logs/`、`pdfs/`、`.venv` 均不入库；
