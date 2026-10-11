@@ -8,7 +8,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_TRUSTED_HOST=pypi.tuna.tsinghua.edu.cn \
     DATABASE_URL=sqlite:////app/data/message_monitor.db \
     WECHAT_SQLITE_DB_PATH=/app/data/message_monitor.db \
-    WECHAT2RSS_BASE=http://host.docker.internal:8081
+    WECHAT2RSS_BASE=http://host.docker.internal:18081
 
 WORKDIR /app
 

@@ -5,7 +5,7 @@
 纯本地链路，不依赖任何远程服务：
 
 ```
-本机 wechat2rss (127.0.0.1:8081)
+本机 wechat2rss (127.0.0.1:18081)
         │ 聚合 feed（每小时）
         ▼
 本地 sqlite（wechat_articles + processed_articles + users）
@@ -19,7 +19,8 @@
 
 ## 环境准备
 
-1. 本机运行 wechat2rss（`127.0.0.1:8081`），容器通过
+1. 本机运行 wechat2rss（`127.0.0.1:18081`；2026-10-09 起由 8081 迁出，8081 被本机
+   invest-assistant-web 的 Vite 占用），容器通过
    `host.docker.internal` 访问它（compose 已配置 `extra_hosts`）。
 2. `config.json`（gitignored，含 DeepSeek/飞书密钥）按
    `config.template.json` 创建；`table_backend` 固定为 `feishu`。

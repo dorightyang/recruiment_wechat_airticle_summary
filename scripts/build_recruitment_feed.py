@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-从本机 wechat2rss (127.0.0.1:8081) 聚合全部订阅为单一 RSS，
+从本机 wechat2rss (127.0.0.1:18081，可用环境变量 WECHAT2RSS_BASE 覆盖) 聚合全部订阅为单一 RSS，
 输出格式兼容原远程 query.php 聚合源：
   - guid: 由原文链接派生的稳定 ID（用于抓取器去重 / PDF 文件名）
   - dc:creator: 公众号名称
@@ -114,7 +114,8 @@ def build_xml(items):
     rss = ET.Element("rss", {"version": "2.0"})
     channel = ET.SubElement(rss, "channel")
     ET.SubElement(channel, "title").text = "wechat2rss"
-    ET.SubElement(channel, "link").text = "http://127.0.0.1:8081/"
+    ET.SubElement(channel, "link").text = os.getenv(
+        "WECHAT2RSS_BASE", "http://127.0.0.1:18081").rstrip("/") + "/"
     ET.SubElement(channel, "description").text = "wechat2rss 的订阅源（本地聚合）"
     ET.SubElement(channel, "pubDate").text = datetime.now().strftime(
         "%a, %d %b %Y %H:%M:%S %z")
@@ -138,7 +139,7 @@ def main():
         format="%(asctime)s - %(levelname)s - %(message)s",
     )
 
-    base = os.getenv("WECHAT2RSS_BASE", "http://127.0.0.1:8081").rstrip("/")
+    base = os.getenv("WECHAT2RSS_BASE", "http://127.0.0.1:18081").rstrip("/")
     token = os.getenv("WECHAT2RSS_RSS_TOKEN", "").strip()
     output_path = Path(os.getenv("WECHAT2RSS_FEED_PATH", str(DEFAULT_OUTPUT)))
     try:

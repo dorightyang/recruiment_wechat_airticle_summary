@@ -8,7 +8,7 @@ services:
     env_file:
       - .env.test
     environment:
-      WECHAT2RSS_BASE: http://host.docker.internal:8081
+      WECHAT2RSS_BASE: http://host.docker.internal:18081
       DATABASE_URL: sqlite:////app/data/message_monitor.db
       WECHAT_SQLITE_DB_PATH: /app/data/message_monitor.db
       PDFSUMMARY_CONFIG: config.json
