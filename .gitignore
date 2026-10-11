@@ -109,6 +109,8 @@ celerybeat-schedule
 
 # Environments
 .env
+.env.*
+!.env.example
 .venv
 env/
 venv/
@@ -151,3 +153,10 @@ cython_debug/
 
 # Datalore workspace files
 .datalore/
+
+# Claude Code 本机权限设置（每台机器不同）
+.claude/settings.local.json
+
+# 本机专用脚本 / 生成物（内含硬编码密钥、账号或本机路径，入库即等于公开）
+test_bot.py
+rss_cron_job.txt
