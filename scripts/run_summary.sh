@@ -24,6 +24,7 @@ if ! mkdir "$LOCK_DIR" 2>/dev/null; then
 fi
 trap 'rmdir "$LOCK_DIR" 2>/dev/null' EXIT
 
-exec .venv/bin/python pdfsummary.py \
+# 不用 exec：exec 会丢掉上面设置的 EXIT trap，导致锁目录残留。
+.venv/bin/python pdfsummary.py \
   "${PDF_DIR:-pdfs}" "${OUTPUT_DIR:-data}" \
   "${PDFSUMMARY_CONFIG:-config.json}" >> logs/summary.log 2>&1

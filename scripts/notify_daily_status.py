@@ -48,13 +48,17 @@ def main():
     ).fetchone()[0]
     conn.close()
 
+    # 管道级错误（影响整次运行）才判 FAIL；单收件人发送失败单独统计，
+    # 只有“全部收件人都没发出去”时才按失败处理，避免失效订阅邮箱误报。
     errors = [
         p for p in [
-            "插入记录失败", "上传失败", "发送邮件失败",
+            "插入记录失败", "上传失败",
             "Traceback (most recent call last)", "CRITICAL",
         ]
         if p in tail
     ]
+    send_fail_count = tail.count("发送邮件失败")
+    send_ok_count = tail.count("发送邮件成功")
     feishu = re.findall(r"Feishu upload summary: (\{[^}]+\})", tail)
     feishu_line = feishu[-1] if feishu else "（无）"
     running = False
@@ -90,6 +94,7 @@ def main():
         f"今日已入库汇总记录：{proc}",
         f"飞书上传：{feishu_line}",
         f"错误标记：{errors or '无'}",
+        f"邮件发送：成功 {send_ok_count} 次 / 失败 {send_fail_count} 次",
     ])
 
     if stuck:
@@ -104,9 +109,15 @@ def main():
     elif errors or (arts > 0 and proc == 0):
         status, subject = "FAIL", f"【招聘汇总】{today} 运行失败"
         body += "\n\n请检查 logs/summary.log 与 logs/backfill.log。"
+    elif send_fail_count > 0 and send_ok_count == 0:
+        status, subject = "FAIL", f"【招聘汇总】{today} 运行失败"
+        body += "\n\n今日汇总邮件全部发送失败（无任何收件人发送成功），请检查 SMTP 与订阅列表。"
     else:
         status, subject = "OK", f"【招聘汇总】{today} 运行成功"
-        body += "\n\n今日汇总已正常发布（飞书表格 + 订阅邮件）。"
+        if send_fail_count > 0:
+            body += "\n\n今日汇总已正常发布（飞书表格 + 订阅邮件）；有部分收件人发送失败，多为失效订阅邮箱，不影响整体。"
+        else:
+            body += "\n\n今日汇总已正常发布（飞书表格 + 订阅邮件）。"
 
     send_email(subject, body, RECIPIENT, text_type="plain")
     print(f"[{status}] {subject}")
