@@ -51,7 +51,7 @@ Set this to run daily for automated WeChat Official Account monitoring and colle
 
 ## Use Case
 
-[Pandora Job Information Sharing](https://jobs.daydreammy.xyz)
+[Pandora Job Information Sharing](https://jobs.dadao.fan)
 
 As of 2024-03-28:
 
