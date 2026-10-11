@@ -17,8 +17,10 @@ TEST_OUTPUT_FOLDER = os.environ.get(
     "TEST_OUTPUT_FOLDER",
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_output"),
 )
+os.makedirs(TEST_OUTPUT_FOLDER, exist_ok=True)
 
 # 1. 创建测试数据（用于测试 fetch_processed_articles_by_id）
+_INSERTED_WX_IDS = []
 
 
 @pytest.fixture(scope="module")
@@ -49,6 +51,7 @@ def test_articles():
     session.add(wx_article_today)
     session.add(wx_article_yesterday)
     session.commit()
+    _INSERTED_WX_IDS.extend([wx_article_today.id, wx_article_yesterday.id])
 
     # 获取插入后的文章ID（original_id）
     article_today = ProcessedArticle(
@@ -175,9 +178,16 @@ def test_save_articles_to_csv(test_articles):
 
 @pytest.fixture(scope="module", autouse=True)
 def cleanup(request):
-    # 清理测试数据：删除插入的文章
+    # 只删本测试自己插入的行；绝不能无条件清表（历史上这里会 delete 全表）
     def _cleanup():
-        session.query(ProcessedArticle).delete()
+        if not _INSERTED_WX_IDS:
+            return
+        session.query(ProcessedArticle).filter(
+            ProcessedArticle.original_id.in_(_INSERTED_WX_IDS)
+        ).delete(synchronize_session=False)
+        session.query(WxArticle).filter(
+            WxArticle.id.in_(_INSERTED_WX_IDS)
+        ).delete(synchronize_session=False)
         session.commit()
 
     request.addfinalizer(_cleanup)

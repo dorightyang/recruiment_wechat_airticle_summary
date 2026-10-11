@@ -160,3 +160,6 @@ cython_debug/
 # 本机专用脚本 / 生成物（内含硬编码密钥、账号或本机路径，入库即等于公开）
 test_bot.py
 rss_cron_job.txt
+
+# 测试产物
+test_output/

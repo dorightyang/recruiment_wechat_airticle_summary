@@ -90,10 +90,16 @@ chmod +x setup_cron.sh
 
 ## Configuration
 
-**Main Config File**: `config.json`
+**Main Config File**: `config.json`（Git 不跟踪；字段与占位符见 `config.template.json`）
 - Contains API keys for OpenAI, Zhipu, Xunfei LLM providers
 - Feishu and Airtable integration tokens
 - Database paths and other settings
+- Notification settings: `notify_email`（告警收件人）、`smtp_server` / `smtp_port` /
+  `smtp_sender_name` / `smtp_email` / `smtp_password`
+
+> 取值优先级统一为 **环境变量 > config.json > 代码缺省值**（见 `common.setting()`）：
+> 上面这些字段都能用同名大写环境变量覆盖（`NOTIFY_EMAIL`、`SMTP_EMAIL`…），
+> 密钥类建议只放 `.env`（Git 不跟踪）。
 
 **Environment Requirements**:
 - Python 3.10+ (uses conda environment `py310`)

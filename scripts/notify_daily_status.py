@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """每日检查招聘汇总运行状态（launchd 10:00 / Docker cron 10:30）。
-成功/失败/无数据都会发邮件到 NOTIFY_EMAIL（默认 1781051483@qq.com）。
+成功/失败/无数据都会发邮件到 config.json 的 notify_email（可用环境变量 NOTIFY_EMAIL 覆盖）。
 """
 
 import os
@@ -13,11 +13,11 @@ from datetime import datetime, timedelta
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from smtp import send_email
+from common import load_app_config, setting
 
 PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(PROJECT, "data", "message_monitor.db")
 LOG = os.path.join(PROJECT, "logs", "summary.log")
-RECIPIENT = os.getenv("NOTIFY_EMAIL", "1781051483@qq.com").strip()
 
 
 def read_tail(path, limit=400000):
@@ -32,6 +32,11 @@ def read_tail(path, limit=400000):
 
 
 def main():
+    recipient = setting("notify_email", load_app_config(), "NOTIFY_EMAIL")
+    if not recipient:
+        print("notify_daily_status: 未配置收件人（config.json 的 notify_email 或环境变量 NOTIFY_EMAIL）",
+              file=sys.stderr)
+        return 2
     today = datetime.now().strftime("%Y-%m-%d")
     yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
     tail = read_tail(LOG)
@@ -119,7 +124,7 @@ def main():
         else:
             body += "\n\n今日汇总已正常发布（飞书表格 + 订阅邮件）。"
 
-    send_email(subject, body, RECIPIENT, text_type="plain")
+    send_email(subject, body, recipient, text_type="plain")
     print(f"[{status}] {subject}")
     return 0
 

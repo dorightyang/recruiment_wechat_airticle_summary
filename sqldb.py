@@ -40,7 +40,7 @@ DATABASE_URL = os.getenv(
 )
 SQLITE_DB_PATH = os.getenv(
     'WECHAT_SQLITE_DB_PATH',
-    '/home/yy/project/Gewechat/vxbot/data/message_monitor.db',
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "message_monitor.db"),
 )
 
 # 初始化 SQLAlchemy
@@ -437,13 +437,18 @@ def get_user_subscribed_accounts(email):
     return list(all_accounts)
 
 
-def test_get_user_subscribed_accounts():
+def test_get_user_subscribed_accounts(email=None):
     """
     测试 get_user_subscribed_accounts 函数，验证查询结果是否符合预期。
+
+    用法：传 email 参数，或设环境变量 TEST_EMAIL。
     """
+    email = email or os.environ.get("TEST_EMAIL", "")
+    if not email:
+        logger.error("未指定待查邮箱：test_get_user_subscribed_accounts(email) 或环境变量 TEST_EMAIL")
+        return
     # 测试查询用户订阅的公众号
     logger.info("测试查询用户订阅的公众号:")
-    email = '1781051483@qq.com'
     accounts = get_user_subscribed_accounts(email)
     logger.info(f"用户 {email} 订阅的公众号: {accounts}, 共 {len(accounts)} 个")
 

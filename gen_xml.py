@@ -5,11 +5,15 @@ from datetime import datetime, date
 import pytz
 from xml.sax.saxutils import escape
 import logging
+import os
 import subprocess
 
 from up2feishu import fetch_user_info_from_feishu_and_update_database
 
 logger = logging.getLogger("pdfsummary")
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.environ.get("RECRUIT_DATA_DIR", os.path.join(PROJECT_ROOT, "data"))
 
 
 def get_pub_date(article):
@@ -92,7 +96,7 @@ def update_upload_xml(xml_file_path):
 def gen_and_update_xml(email, articles):
     email_filename = email.replace(
         '@', '_at_').replace('.', '_dot_')
-    xml_file_path = f"/home/yy/project/recruiment_article_summary/data/{email_filename}_rss.xml"
+    xml_file_path = os.path.join(DATA_DIR, f"{email_filename}_rss.xml")
     generate_rss(
         articles, output_path=xml_file_path)
     update_upload_xml(xml_file_path)
@@ -117,7 +121,7 @@ def fetch_and_update_xml(users_info=None):
 # 使用示例
 if __name__ == "__main__":
     # 假设从数据库获取当天文章列表
-    # email = '1781051483@qq.com'
+    # email = 'someone@example.com'
     # articles = get_user_subscribed_accounts_processed_articles(
     #     email, only_today=True)
     # generate_rss(articles)

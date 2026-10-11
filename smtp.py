@@ -7,17 +7,19 @@ from email.mime.multipart import MIMEMultipart
 from email.utils import formataddr
 from datetime import datetime
 import logging
+from common import load_app_config, setting
 
 # 配置日志
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 # 邮箱配置信息
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.163.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "465"))
-SENDER_NAME = os.getenv("SMTP_SENDER_NAME", "微秘Daily")
-EMAIL_ADDRESS = os.getenv("SMTP_EMAIL", "daydreammy@163.com")
-EMAIL_PASSWORD = os.getenv("SMTP_PASSWORD", "")
+_CONFIG = load_app_config()
+SMTP_SERVER = setting("smtp_server", _CONFIG, "SMTP_SERVER", "smtp.163.com")
+SMTP_PORT = int(setting("smtp_port", _CONFIG, "SMTP_PORT", "465"))
+SENDER_NAME = setting("smtp_sender_name", _CONFIG, "SMTP_SENDER_NAME", "微秘Daily")
+EMAIL_ADDRESS = setting("smtp_email", _CONFIG, "SMTP_EMAIL")
+EMAIL_PASSWORD = setting("smtp_password", _CONFIG, "SMTP_PASSWORD")
 
 # 招聘信息的邮件主题和内容 (主题要带上日期)
 RECRUITMENT_SUBJECT = f"Pandora招聘信息总结 - {datetime.now().strftime('%Y-%m-%d')}"
@@ -169,7 +171,10 @@ def test_send_email():
     try:
         subject = "测试邮件"
         body = "这是一封测试邮件，来自 Python 程序。"
-        recipient_email = "1781051483@qq.com"  # 替换为目标收件人邮箱
+        recipient_email = setting("notify_email", _CONFIG, "NOTIFY_EMAIL")
+        if not recipient_email:
+            logging.error("未配置收件人：请设置 config.json 的 notify_email 或环境变量 NOTIFY_EMAIL")
+            return
         send_email(subject, body, recipient_email)
     except Exception as e:
         logging.error(f"测试发送邮件失败: {e}")
@@ -220,9 +225,12 @@ def test_send_email_file(file_path=None):
     try:
         subject = RECRUITMENT_SUBJECT
         body = RECRUITMENT_BODY
-        recipient_email = "1781051483@qq.com"  # 替换为目标收件人邮箱
+        recipient_email = setting("notify_email", _CONFIG, "NOTIFY_EMAIL")
+        if not recipient_email:
+            logging.error("未配置收件人：请设置 config.json 的 notify_email 或环境变量 NOTIFY_EMAIL")
+            return
         if not file_path:
-            file_path = r"/home/yy/project/recruiment_article_summary/example.log"
+            file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "example.log")
         send_email_file(subject, body, recipient_email, file_path)
     except Exception as e:
         logging.error(f"测试发送邮件失败: {e}")

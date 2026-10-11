@@ -10,13 +10,13 @@ from datetime import datetime, timedelta
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from smtp import send_email
+from common import load_app_config, setting
 
 PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(PROJECT, "data", "message_monitor.db")
 FETCH_LOG = os.path.join(PROJECT, "logs", "rss_fetcher.log")
 BUILD_LOG = os.path.join(PROJECT, "logs", "build_feed.log")
 STATE_FILE = os.path.join(PROJECT, "logs", ".fetch_alert_state")
-RECIPIENT = os.getenv("NOTIFY_EMAIL", "1781051483@qq.com").strip()
 
 
 def parse_etime(s):
@@ -91,6 +91,12 @@ def main():
     if not problems:
         return 0
 
+    recipient = setting("notify_email", load_app_config(), "NOTIFY_EMAIL")
+    if not recipient:
+        print("check_fetch_health: 未配置收件人（config.json 的 notify_email 或环境变量 NOTIFY_EMAIL）",
+              file=sys.stderr)
+        return 2
+
     # 去重：同一问题 12 小时内只提醒一次
     try:
         last_alert = datetime.fromtimestamp(float(open(STATE_FILE).read().strip()))
@@ -104,7 +110,7 @@ def main():
     subject = "【招聘抓取】异常告警"
     body = "时间：%s\n\n%s\n\n请检查 logs/rss_fetcher.log 与 logs/build_feed.log。" % (
         datetime.now().strftime("%F %T"), "\n".join(problems))
-    send_email(subject, body, RECIPIENT, text_type="plain")
+    send_email(subject, body, recipient, text_type="plain")
     print(subject)
     print(body)
     return 1

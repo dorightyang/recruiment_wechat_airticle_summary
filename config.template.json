@@ -19,5 +19,11 @@
     "feishu_appid": "",
     "feishu_appsecret": "",
     "feishu_apptoken": "",
-    "feishu_table_id": ""
+    "feishu_table_id": "",
+    "notify_email": "",
+    "smtp_server": "smtp.163.com",
+    "smtp_port": 465,
+    "smtp_sender_name": "微秘Daily",
+    "smtp_email": "",
+    "smtp_password": ""
 }

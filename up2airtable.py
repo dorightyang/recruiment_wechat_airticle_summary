@@ -77,7 +77,14 @@ def upload_to_airtable(csv_file_path, config=None):
 
 
 if __name__ == '__main__':
-    upload_csv_to_airtable(
-        r'E:\OneDrive - tongji.edu.cn\个人项目\Input\wechatmonitor\public\2023-12-26_招聘信息汇总.csv')
-    upload_csv_to_airtable(
-        r'E:\OneDrive - tongji.edu.cn\个人项目\Input\wechatmonitor\public\2023-12-25_招聘信息汇总.csv')
+    # 用法：python up2airtable.py <csv 路径>（或设环境变量 AIRTABLE_CSV）
+    # Airtable 的 tokens / base_id / table_name 从 config.json 读取。
+    import os
+    import sys
+
+    from common import load_app_config
+
+    csv_path = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("AIRTABLE_CSV", "")
+    if not csv_path:
+        raise SystemExit("usage: python up2airtable.py <csv 路径>（或设环境变量 AIRTABLE_CSV）")
+    upload_to_airtable(csv_path, load_app_config())
