@@ -21,6 +21,7 @@ fonts/
 
 # config
 config.json
+config.json.bak-*
 config.test.json
 
 # C extensions
