@@ -20,7 +20,7 @@ RSS Feed → RSS Fetcher → SQLite DB + PDFs → Article Processor → LLM Proc
 
 **RSS Article Fetcher (`rss_article_fetcher_enhanced.py`)**:
 - Fetches articles from configured RSS URL
-- Stores in SQLite database at `/home/yy/project/Gewechat/vxbot/data/message_monitor.db`
+- Stores in SQLite database at `data/message_monitor.db` (default; override with `WECHAT_SQLITE_DB_PATH`)
 - Generates PDF files in `./pdfs/` directory using wkhtmltopdf
 - Supports incremental updates and cron job execution
 
@@ -85,7 +85,7 @@ chmod +x setup_cron.sh
 ./setup_cron.sh
 
 # Manual cron setup (runs every hour)
-(crontab -l 2>/dev/null; echo '0 * * * * cd /home/yy/project/recruiment_article_summary && /home/yy/anaconda3/envs/py310/bin/python rss_article_fetcher_enhanced.py >> cron.log 2>&1') | crontab -
+(crontab -l 2>/dev/null; echo '0 * * * * cd /path/to/recruiment-article-summary && python3 rss_article_fetcher_enhanced.py >> cron.log 2>&1') | crontab -
 ```
 
 ## Configuration
@@ -127,16 +127,16 @@ Prompt management is handled through `prompts.py` with specialized prompts for:
 ## Logging
 
 - RSS fetcher logs: `rss_fetcher_enhanced.log`
-- Main application logs: `/home/yy/project/recruiment_article_summary/logs/YYYY-MM-DD.log`
+- Main application logs: `logs/YYYY-MM-DD.log`
 - Cron job logs: `cron.log`
 
 ## Key File Locations
 
 - **Main scripts**: `rss_article_fetcher_enhanced.py`, `pdfsummary.py`
-- **Database**: `/home/yy/project/Gewechat/vxbot/data/message_monitor.db`
+- **Database**: `data/message_monitor.db` (override with `WECHAT_SQLITE_DB_PATH`)
 - **PDF storage**: `./pdfs/`
 - **Configuration**: `config.json`
-- **Logs**: `/home/yy/project/recruiment_article_summary/logs/`
+- **Logs**: `logs/`
 
 ## Development Notes
 

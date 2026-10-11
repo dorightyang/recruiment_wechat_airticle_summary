@@ -45,7 +45,7 @@
 | `--dry-run` | 试运行模式，不实际插入数据库 | False |
 | `--skip-pdf` | 跳过PDF生成 | False |
 | `--rss-url` | RSS订阅地址 | 默认配置的地址 |
-| `--db-path` | 数据库文件路径 | `/home/yy/project/Gewechat/vxbot/data/message_monitor.db` |
+| `--db-path` | 数据库文件路径 | `data/message_monitor.db`（可用环境变量 `WECHAT_SQLITE_DB_PATH` 覆盖） |
 | `--pdf-dir` | PDF保存目录 | `./pdfs` |
 | `--verbose` | 详细输出 | False |
 
@@ -74,7 +74,7 @@ chmod +x setup_cron.sh
 ./setup_cron.sh
 
 # 手动添加（每小时运行一次）
-(crontab -l 2>/dev/null; echo '0 * * * * cd /home/yy/project/recruiment_article_summary && /home/yy/anaconda3/envs/py310/bin/python rss_article_fetcher_enhanced.py >> cron.log 2>&1') | crontab -
+(crontab -l 2>/dev/null; echo '0 * * * * cd /path/to/recruiment-article-summary && python3 rss_article_fetcher_enhanced.py >> cron.log 2>&1') | crontab -
 ```
 
 ### 推荐的运行频率
@@ -129,7 +129,7 @@ tail -f cron.log
 # 测试数据库连接
 ~/anaconda3/envs/py310/bin/python -c "
 import sqlite3
-conn = sqlite3.connect('/home/yy/project/Gewechat/vxbot/data/message_monitor.db')
+conn = sqlite3.connect('data/message_monitor.db')
 print('数据库连接成功')
 conn.close()
 "

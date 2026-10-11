@@ -12,8 +12,11 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# 设置一个测试文件夹路径
-TEST_OUTPUT_FOLDER = r'D:\yy\wechatmonitor\code\test_output'
+# 设置一个测试文件夹路径（默认写到仓库内的 test_output/，可用环境变量覆盖）
+TEST_OUTPUT_FOLDER = os.environ.get(
+    "TEST_OUTPUT_FOLDER",
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_output"),
+)
 
 # 1. 创建测试数据（用于测试 fetch_processed_articles_by_id）
 
@@ -182,7 +185,7 @@ def cleanup(request):
 
 def get_pdf_paths_from_db():
     """Fetch PDF file paths from wechat_articles table in SQLite database"""
-    db_path = "/home/yy/project/Gewechat/vxbot/data/message_monitor.db"
+    db_path = os.environ.get("WECHAT_SQLITE_DB_PATH", "data/message_monitor.db")
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()

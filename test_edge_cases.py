@@ -6,7 +6,8 @@
 
 import sys
 import os
-sys.path.append('/home/yy/project/recruiment_article_summary')
+# 用脚本自身位置推导仓库根目录，避免写死本机路径
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqldb import build_query_conditions, get_user_subscribed_accounts_processed_articles
 import logging

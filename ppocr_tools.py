@@ -3,13 +3,12 @@ from PIL import Image
 from paddleocr import PaddleOCR, draw_ocr
 
 
-def ppocr_demo():
+def ppocr_demo(img_path="tmp/page_0025.jpeg"):
     # Paddleocr目前支持的多语言语种可以通过修改lang参数进行切换
     # 例如`ch`, `en`, `fr`, `german`, `korean`, `japan`
     # need to run only once to download and load model into memory
     ocr = PaddleOCR(use_angle_cls=False, lang="ch",
                     use_gpu=False, show_log=False)
-    img_path = r"/home/yy/project/recruiment_article_summary/tmp/page_0025.jpeg"
     result = ocr.ocr(img_path, cls=False)
     for idx in range(len(result)):
         res = result[idx]
